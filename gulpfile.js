@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+    run = require('gulp-run'),
     source = require('vinyl-source-stream'),
     browserify = require('browserify'),
     aliasify = require('aliasify'),
@@ -13,6 +14,12 @@ var srcDir = path.join(__dirname, 'monitor', 'static'),
     dstCssDir = path.join(dstDir, 'css');
 
 
+gulp.task('tests', function () {
+    var fullPath = path.join(__dirname, 'monitor', 'static', 'tests', 'buster.js');
+    run('buster-test --config=' + fullPath).exec();
+});
+
+
 gulp.task('clean', function () {
     gulp.src(path.join(dstDir, '**', '*.js'), {read: false})
         .pipe(clean());
@@ -22,11 +29,11 @@ gulp.task('clean', function () {
 });
 
 
-gulp.task('build-sass', function () {
+/*gulp.task('build-sass', function () {
     gulp.src(path.join(srcDir, 'css/*.scss')
         .pipe(sass())
         .pipe(gulp.dest(path.join(dstDir, 'css')));
-});
+});*/
 
 
 gulp.task('build-js', function () {
