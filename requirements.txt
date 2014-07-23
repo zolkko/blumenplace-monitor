@@ -1,9 +1,12 @@
-Flask==0.10.1
-Jinja2==2.7.3
-MarkupSafe==0.23
-SQLAlchemy==0.9.6
-Werkzeug==0.9.6
-itsdangerous==0.24
-anyjson==0.3.3
-WTForms==2.0.1
-cymysql==0.7.3
+anyjson (0.3.3)
+cymysql (0.7.3)
+Flask (0.10.1)
+itsdangerous (0.24)
+Jinja2 (2.7.3)
+MarkupSafe (0.23)
+nose (1.3.3)
+pip (1.5.4)
+setuptools (2.2)
+SQLAlchemy (0.9.6)
+Werkzeug (0.9.6)
+WTForms (2.0.1)

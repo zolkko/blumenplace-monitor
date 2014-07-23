@@ -14,9 +14,20 @@ var srcDir = path.join(__dirname, 'monitor', 'static'),
     dstCssDir = path.join(dstDir, 'css');
 
 
-gulp.task('tests', function () {
-    var fullPath = path.join(__dirname, 'monitor', 'static', 'tests', 'buster.js');
-    run('buster-test --config=' + fullPath).exec();
+gulp.task('tests-js', function () {
+    run('buster-test --config=' +
+        path.join(__dirname, 'monitor', 'static', 'tests', 'buster.js')).exec();
+});
+
+
+gulp.task('tests-python', function () {
+    run(path.join(__dirname, '..', 'bin', 'nosetests') +
+        ' ' +
+        path.join(__dirname, 'monitor', 'tests')).exec();
+});
+
+
+gulp.task('tests', ['tests-js', 'tests-python'], function () {
 });
 
 
@@ -29,11 +40,11 @@ gulp.task('clean', function () {
 });
 
 
-/*gulp.task('build-sass', function () {
-    gulp.src(path.join(srcDir, 'css/*.scss')
+gulp.task('build-sass', function () {
+    gulp.src(path.join(srcDir, 'css/*.scss'))
         .pipe(sass())
         .pipe(gulp.dest(path.join(dstDir, 'css')));
-});*/
+});
 
 
 gulp.task('build-js', function () {
