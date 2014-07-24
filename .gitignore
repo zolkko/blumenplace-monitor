@@ -52,3 +52,17 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+# bower
+bower_components/
+
+# node
+node_modules/
+
+# .idea / pycharm
+.idea/
+
+# vim files
+.*.swp
+
+# static-dev output
+static-dev/
