@@ -9,6 +9,8 @@ from logging.config import dictConfig as loggerDictConfig
 from anyjson import deserialize
 
 from monitor.app import MonitorApp
+from monitor.flaskdb import init as init_db
+from monitor.views import init as init_views
 
 
 def create_argument_parser():
@@ -49,6 +51,10 @@ def main():
 
     try:
         app = MonitorApp(config)
+
+        init_db(app, None)
+        init_views(app)
+
         app.run()
     except Exception as ex:
         logger.critical('blumenplace-monitor critical exception. Reason: {}.'.format(ex))

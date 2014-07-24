@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 
+from logging import getLogger
+
 from flask import _app_ctx_stack
 
+from monitor.models import ModelClass
 from monitor.db import Database
+
+
+logger = getLogger(__name__)
 
 
 class FlaskDatabase(Database):
@@ -23,3 +29,10 @@ class FlaskDatabase(Database):
 
     def get_scope_func(self):
         return _app_ctx_stack.__ident_func__
+
+
+def init(app, config):
+    logger.info('Initializing database.')
+    db = FlaskDatabase(ModelClass, config)
+    db.init_app(app)
+    logger.info('Database has been initialized.')
