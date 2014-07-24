@@ -1,3 +1,36 @@
 {
+    "staticFolder": "./static-dev",
+    "staticUrl": "/static",
+    "templateFolder": "templates",
 
+    "DEBUG": true,
+
+    "loggers": {
+        "version": 1,
+        "formatters": {
+            "default": {
+                "format": "[%(levelname)s]P:%(process)d T:%(thread)d %(asctime)s %(name)s.%(funcName)s: %(message)s",
+                "datefmt": "%Y-%b-%d %H:%M:%S"
+            }
+        },
+        "filters": {
+        },
+        "handlers": {
+            "null": {
+                "level": "DEBUG",
+                "class": "logging.NullHandler"
+            },
+            "console": {
+                "level": "DEBUG",
+                "class": "logging.StreamHandler",
+                "formatter": "default"
+            }
+        },
+        "root": {
+            "level": "DEBUG",
+            "handlers": ["null", "console"]
+        },
+        "loggers": {
+        }
+    }
 }
