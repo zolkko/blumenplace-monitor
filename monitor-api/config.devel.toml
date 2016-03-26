@@ -1,0 +1,48 @@
+LOGGER_NAME = app
+staticFolder = "./static-dev"
+staticUrl = "/static"
+templateFolder = "templates"
+
+[jwt]
+pub = "../castore/bpmon.pub"
+prv = "../castore/bpmon.prv"
+realm = "Login Required"
+alg = "RS256"
+leeway = 10
+prefix = "JWT"
+exp = 300
+nbf = 0
+verify_claims = ["signature", "exp", "nbf", "iat"]
+required_claims = ["exp", "iat", "nbf"]
+
+[log]
+version = 1
+incremental = false
+disable_existing_loggers = true
+
+[log.root]
+level = "DEBUG"
+handlers = ["console"]
+
+[log.loggers]
+
+[log.loggers.app]
+level = "DEBUG"
+handlers = ["console"]
+
+[log.handlers]
+
+[log.handlers.null]
+level = "DEBUG"
+class = "logging.NullHandler"
+
+[log.handlers.console]
+level = "DEBUG"
+class = "logging.StreamHandler"
+formatter = "default"
+
+[log.formatters]
+
+[log.formatters.default]
+# format = "[%(levelname)s]P:%(process)d T:%(thread)d %(asctime)s %(name)s.%(funcName)s: %(message)s"
+datefmt = "%Y-%b-%d %H:%M:%S"
