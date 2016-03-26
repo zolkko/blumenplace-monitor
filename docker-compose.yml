@@ -1,0 +1,37 @@
+---
+version: '2'
+services:
+  ca:
+    build: ./castore
+    command: echo 'CA storage'
+  data:
+    build: ./data
+    command: echo 'postgresql data container'
+    volumes:
+    - /var/lib/postgresql/data
+  postgres:
+    image: postgres:9.5
+    #ports:
+    #- "5432:5432"
+    volumes_from:
+    - data
+    depends_on:
+    - data
+  redis:
+    image: redis:alpine
+    #ports:
+    #- "6379:6379"
+  api:
+    build: ./monitor-api
+    volumes_from:
+    - ca
+    depends_on:
+    - redis
+    - postgres
+  nginx:
+    build: ./nginx
+    ports:
+    - "80:80"
+    depends_on:
+    - api
+
