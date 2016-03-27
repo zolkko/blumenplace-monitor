@@ -6,14 +6,16 @@ var autoprefixer = require('autoprefixer');
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
+var staticPath = "/static/";
+
 module.exports = {
     entry: {
         signin: ["./src/js/signin.js"],
         vendor: ["react", "react-dom"]
     },
     output: {
-        path: path.join(__dirname, "static"),
-        filename: "js/[name].js"
+        path: __dirname,
+        filename: staticPath + "js/[name].js"
     },
     module: {
         loaders: [
@@ -29,7 +31,7 @@ module.exports = {
                 }
             },
             {
-                loader: ExtractTextPlugin.extract("style", "!css!postcss"),
+                loader: ExtractTextPlugin.extract("style", "!css?-minimize!postcss"),
                 test: /\.css$/
             },
             {
@@ -38,11 +40,11 @@ module.exports = {
                 include: path.join(__dirname, "src/scss")
             },
             {
-                loader: 'file?name=[path][name].[ext]',
+                loader: "file?name=" + staticPath + "css/images/[name].[ext]",
                 test: /\.(gif|svg|jpeg|png|jpg)$/
             },
             {
-                loader: 'file?name=[name].[ext]',
+                loader: "file?name=" + staticPath + "css/fonts/[name].[ext]",
                 test: /\.(woff|woff2|ttf|eot)$/
             }
         ]
@@ -65,14 +67,14 @@ module.exports = {
         root: path.join(__dirname, "node_modules")
     },
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin("vendor", "js/vendor.bundle.js"),
+        new webpack.optimize.CommonsChunkPlugin("vendor", staticPath + "js/vendor.bundle.js"),
         new webpack.optimize.UglifyJsPlugin({
             compressor: {
                 screw_ie8: true,
                 warnings: false
             }
         }),
-        new ExtractTextPlugin("css/[name].css")
+        new ExtractTextPlugin(staticPath + "css/[name].css")
     ],
     taregt: "web",
     debug: true,
