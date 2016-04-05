@@ -5,12 +5,13 @@ var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
+  context: path.join(__dirname, "src/js"),
   entry: {
-    signin: ["babel-polyfill", "./src/js/signin.js"],
-    index: ["babel-polyfill", "./src/js/index.js"]
+    index: ["babel-polyfill", "./index.js"]
   },
   output: {
     path: path.join(__dirname, "static"),
+    outputPath: __dirname,
     filename: "js/[name].js"
   },
   module: {
@@ -43,15 +44,23 @@ module.exports = {
       $: "jquery",
       _: "lodash"
     }),
-    new webpack.optimize.UglifyJsPlugin({
+    /*new webpack.optimize.UglifyJsPlugin({
       compressor: {
         screw_ie8: true,
         warnings: false
       }
-    }),
+    }),*/
     new ExtractTextPlugin("css/[name].css")
   ],
   taregt: "web",
   debug: true,
-  devtool: "#inline-source-map"
+  devtool: "#inline-source-map",
+  devServer: {
+    hot: true,
+    publicPath: "/static",
+    watchOptions: {
+      aggregateTimeout: 300,
+      poll: 1000 // is this the same as specifying --watch-poll?
+    }
+  }
 }

@@ -3,9 +3,13 @@
 from os import path
 from collections import Mapping
 
-import contoml
-
+from contoml import load as toml_load
 from flask.config import Config as BaseConfig
+
+
+__all__ = (
+    'MonitorConfig',
+)
 
 
 class MonitorConfig(BaseConfig):
@@ -20,4 +24,4 @@ class MonitorConfig(BaseConfig):
         if not path.isabs(filename):
             file_path = path.join(self.root_path, file_path)
 
-        return self.from_dict(contoml.load(file_path).primitive)
+        return self.from_dict(toml_load(file_path).primitive)

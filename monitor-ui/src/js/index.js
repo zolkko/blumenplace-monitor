@@ -1,21 +1,24 @@
 import React from "react";
 import { render } from "react-dom";
-import { Router, Route, Link, browserHistory } from "react-router";
+import { Provider } from "react-redux";
+import { Router, IndexRoute, Route, Link, browserHistory } from "react-router";
 
-import NotFound from "./components/notfound";
-import Users from "./components/users";
-import User from "./components/user";
+import store from "./store";
+
 import App from "./components/app";
+import Home from "./components/home";
+import SignIn from "./components/signin";
+import NotFound from "./components/notfound";
 
-console.log("rendering component");
 
 render((
-    <Router history={browserHistory}>
-        <Route path="/" component={App}>
-            <Route path="users" component={Users}>
-                <Route path="/user/:userId" component={User}/>
+    <Provider store={store}>
+        <Router history={browserHistory}>
+            <Route path="/" component={App}>
+                <IndexRoute component={Home} />
+                <Route path="signin" component={SignIn}/>
             </Route>
             <Route path="*" component={NotFound}/>
-        </Route>
-    </Router>
+        </Router>
+    </Provider>
 ), document.getElementById("app"));

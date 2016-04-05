@@ -11,8 +11,9 @@ from flask import Flask, g
 from flask.json import JSONEncoder
 from werkzeug.datastructures import ImmutableDict
 
-from . import urls
-from .config import MonitorConfig
+from monitor import urls
+from monitor.config import MonitorConfig
+from monitor.models import db
 
 
 __all__ = (
@@ -104,5 +105,11 @@ class MonitorApp(Flask):
     def init_views(self):
         return urls.init(self)
 
-    def init_model(self):
-        pass
+    def init_models(self):
+        from sqlalchemy.engine.reflection import Inspector
+
+        db.init_app(self)
+
+        inspector = Inspector.from_engine(db.engine)
+        for table_name in inspector.get_table_names():
+            self.logger.info('table: %s' % (table_name, ))

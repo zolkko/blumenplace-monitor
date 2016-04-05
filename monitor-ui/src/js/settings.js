@@ -1,5 +1,6 @@
 export default {
-    apiUrl: "http://localhost:9090/api/v1",
-    signinUrl: "signin.html",
-    authTokenHeader: "X-Auth-Token"
+    apiUrl: "http://localhost:5000/api/v1",
+    tokensUrl: "tokens",
+    authTokenHeader: "X-Access-Token",
+    signInUrl: "/signin"
 }

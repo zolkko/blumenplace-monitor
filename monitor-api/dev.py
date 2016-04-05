@@ -13,7 +13,7 @@ def main():
     try:
         application = create_app('blumenplace-monitor-dev', toml_file=options.config)
         application.init_loggers()
-        application.init_model()
+        application.init_models()
         application.init_views()
         application.run(debug=True, use_debugger=True, use_reloader=False)
     except Exception as ex:

@@ -3,7 +3,12 @@
 import re
 
 
-SIMPLE_EMAIL_REGEX = re.compile(r'[^\s]+@[^\s]+$')
+__all__ = (
+    'email_validator',
+)
+
+
+SIMPLE_EMAIL_REGEX = re.compile(r'.+@.+$')
 
 
 def email_validator(value):

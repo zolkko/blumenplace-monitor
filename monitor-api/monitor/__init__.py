@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from argparse import ArgumentParser
-from .app import MonitorApp
+from monitor.app import MonitorApp
 
 
 APP_NAME = 'blumenplace-monitor'
@@ -13,7 +13,6 @@ __all__ = (
     'config',
     'models',
     'userservice',
-    'views',
 
     'parse_arguments',
     'create_app'
