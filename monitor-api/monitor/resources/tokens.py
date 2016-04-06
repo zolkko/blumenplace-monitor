@@ -3,11 +3,14 @@
 from flask import current_app, request
 from flask_restful import reqparse
 
+from werkzeug.exceptions import HTTPException
+
 from monitor.tokens import create_token, token_required, current_identity
 from monitor.field_validators import email_validator
 from monitor.resources.base import BaseResource
 from monitor.models import db
 from monitor.userservice import UserService
+from monitor.exceptions import MonitorException
 
 
 __all__ = ('Tokens', )
@@ -35,7 +38,14 @@ class Tokens(BaseResource):
         args = self.sign_in_parser.parse_args(request, strict=True)
 
         user_service = UserService(db.session)
-        user = user_service.get(args['email'], args['password'])
+        try:
+            user = user_service.get(args['email'], args['password'])
+        except HTTPException as error:
+            current_app.logger.warning('Failed to authenticate user %s. Reason: %s' % (args['email'], error))
+            if error.code == 404:
+                raise MonitorException(404, 'Invalid credentials')
+            else:
+                raise error
 
         access_token, expire_at = create_token(user.id, user.email)
         current_app.logger.info('Access token has been generated for user %s' % (user.id, ))

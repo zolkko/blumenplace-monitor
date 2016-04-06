@@ -1,20 +1,24 @@
 "use strict";
 
 var path = require("path");
-var precss = require('precss');
-var autoprefixer = require('autoprefixer');
+var precss = require("precss");
+var autoprefixer = require("autoprefixer");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-var staticPath = "/static/";
+
+const staticPath = "static";
+const staticUrl = "/static/";
+
 
 module.exports = {
   context: path.join(__dirname, "src/js"),
   entry: {
-    index: ["babel-polyfill", "./index.js"]
+    vendor: ["lodash", "axios", "babel-polyfill", "react", "react-dom", "react-router", "redux", "react-redux", "redux-thunk"],
+    index: ["./index.js"]
   },
   output: {
-    path: path.join(__dirname, "static"),
+    path: path.join(__dirname, staticPath),
     outputPath: __dirname,
     filename: "js/[name].js"
   },
@@ -32,22 +36,43 @@ module.exports = {
         }
       },
       {
-        loader: ExtractTextPlugin.extract("style-loader", "!css-loader!sass-loader?sourceMap"),
+        loader: ExtractTextPlugin.extract("style", "!css?-minimize!postcss"),
+        test: /\.css$/
+      },
+      {
+        loader: ExtractTextPlugin.extract("style", "!css!postcss!sass"),
         test: /\.scss$/,
         include: path.join(__dirname, "src/scss")
       },
       {
-        loader: ExtractTextPlugin.extract("style-loader", "!css-loader?sourceMap"),
-        test: /\.css$/,
-        include: path.join(__dirname, "src/css")
+        loader: "file?name=images/[name].[ext]",
+        test: /\.(gif|svg|jpeg|png|jpg)$/
+      },
+      {
+        loader: "file?name=fonts/[name].[ext]",
+        test: /\.(woff|woff2|ttf|eot)$/
       }
     ]
   },
+  postcss: function () {
+      return [autoprefixer, precss];
+  },
+  resolve: {
+      root: [
+          path.join(__dirname, "src/js"),
+          path.join(__dirname, "src/scss")
+      ],
+      alias: {
+          "semantic-ui": path.join(__dirname, "node_modules/semantic-ui-css/components")
+      },
+      modulesDirectories: ["node_modules"],
+      extensions: ["", ".js", ".jsx"]
+  },
+  resolveLoader: {
+      root: path.join(__dirname, "node_modules")
+  },
   plugins: [
-    new webpack.ProvidePlugin({
-      $: "jquery",
-      _: "lodash"
-    }),
+    new webpack.optimize.CommonsChunkPlugin("vendor", "js/vendor.bundle.js"),
     /*new webpack.optimize.UglifyJsPlugin({
       compressor: {
         screw_ie8: true,

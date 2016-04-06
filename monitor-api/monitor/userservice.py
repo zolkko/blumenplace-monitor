@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from flask import abort
 from sqlalchemy.orm import Query
 
 from monitor.models import User
@@ -21,4 +22,4 @@ class UserService(object):
         if user and user.password_valid(password):
             return user
         else:
-            return None
+            abort(404)

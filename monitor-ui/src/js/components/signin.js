@@ -8,6 +8,20 @@ import {
 } from "../utils";
 
 
+import "semantic-ui/reset.css";
+import "semantic-ui/site.css";
+import "semantic-ui/container.css";
+import "semantic-ui/grid.css";
+import "semantic-ui/header.css";
+import "semantic-ui/form.css";
+import "semantic-ui/label.css";
+import "semantic-ui/input.css";
+import "semantic-ui/button.css";
+import "semantic-ui/icon.css";
+import "semantic-ui/message.css";
+import "signin.scss";
+
+
 class SignIn extends React.Component {
     constructor(props) {
         super(props);
@@ -73,7 +87,7 @@ class SignIn extends React.Component {
         if (this.props.error !== null && _.isObject(this.props.error)) {
             return (
                 <div className="ui error message">
-                    <div className="header">Error</div>
+                    <div className="header">sign-in failed</div>
                     {_.map(this.props.error, function (error, title) {
                         return (<p key={title}>{ error }</p>);
                     })}
@@ -82,7 +96,7 @@ class SignIn extends React.Component {
         } else if (_.isString(this.props.error) && this.props.error.length > 0) {
             return (
                 <div className="ui error message">
-                    <div className="header">Error</div>
+                    <div className="header">sign-in failed</div>
                     <p>{ this.props.error }</p>
                 </div>
             );
@@ -95,26 +109,35 @@ class SignIn extends React.Component {
         let errors = this.prepareErrors();
 
         return (
-            <div className="main-container">
-                <div className="form-container">
-                    <form action="#" method="post">
-                        <div className={this.props.isLoading ? "ui loading form segment" : "ui form segment"}>
-                            { errors }
-                            <SignInField name="email" label="Email"
-                                inputType="text" icon="user" placeholder="e-mail"
-                                value={this.state.email}
-                                isValid={this.state.emailValid}
-                                onChange={this.handleEmailChange.bind(this)} />
-                            <SignInField
-                                name="password" label="Password" inputType="password" icon="lock"
-                                value={this.state.password}
-                                isValid={this.state.passwordValid}
-                                onChange={this.handlePasswordChange.bind(this)} />
-                            <button onClick={this.onSignIn.bind(this)}
-                                className="ui blue submit button">Sign-In</button>
+            <div className="ui middle aligned center aligned grid main-grid">
+                <div className="row" style={{height: "20%"}}></div>
+                <div className="row" style={{height: "50%"}}>
+                    <div className="column six wide">
+                        <div className="ui left aligned grid">
+                            <div className="column sixteen wide center aligned"><h1>blumenplace monitor</h1></div>
+                            <div className="column sixteen wide">
+
+                                { errors }
+                                <div className={this.props.isLoading ? "ui loading form segment" : "ui form segment"}>
+                                    <SignInField name="email" label="Email"
+                                        inputType="text" icon="user" placeholder="e-mail"
+                                        value={this.state.email}
+                                        isValid={this.state.emailValid}
+                                        onChange={this.handleEmailChange.bind(this)} />
+                                    <SignInField
+                                        name="password" label="Password" inputType="password" icon="lock"
+                                        value={this.state.password}
+                                        isValid={this.state.passwordValid}
+                                        onChange={this.handlePasswordChange.bind(this)} />
+                                    <button onClick={this.onSignIn.bind(this)}
+                                        className="ui blue submit button">Sign-In</button>
+                                </div>
+
+                            </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
+                <div className="row" style={{height: "30%"}}></div>
             </div>
         );
     }
