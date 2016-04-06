@@ -17,11 +17,8 @@ class UserService(object):
         return not self.session.query(self.__is_empty_expression).scalar()
 
     def get(self, email, password):
-        user = Query(User).filter_by(email=email).first()
-        if not user:
-            return None
+        user = User.query.filter_by(email=email).first_or_404()
+        if user and user.password_valid(password):
+            return user
         else:
-            if not user.password_valid(password):
-                return None
-            else:
-                return user
+            return None

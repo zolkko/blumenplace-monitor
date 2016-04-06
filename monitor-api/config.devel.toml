@@ -4,28 +4,28 @@ staticUrl = "/static"
 templateFolder = "templates"
 
 SQLALCHEMY_DATABASE_URI = "sqlite:///./dev.sqlite"
-SQLALCHEMY_BINDS = null
-SQLALCHEMY_NATIVE_UNICODE = null
-SQLALCHEMY_ECHO = false
-SQLALCHEMY_RECORD_QUERIES = null
-SQLALCHEMY_POOL_SIZE = null
-SQLALCHEMY_POOL_TIMEOUT = null
-SQLALCHEMY_POOL_RECYCLE = null
-SQLALCHEMY_MAX_OVERFLOW = null
+# SQLALCHEMY_BINDS =
+# SQLALCHEMY_NATIVE_UNICODE =
+SQLALCHEMY_ECHO = true
+# SQLALCHEMY_RECORD_QUERIES =
+# SQLALCHEMY_POOL_SIZE =
+# SQLALCHEMY_POOL_TIMEOUT =
+# SQLALCHEMY_POOL_RECYCLE =
+# SQLALCHEMY_MAX_OVERFLOW =
 SQLALCHEMY_COMMIT_ON_TEARDOWN = false
-SQLALCHEMY_TRACK_MODIFICATIONS = null
+# SQLALCHEMY_TRACK_MODIFICATIONS =
 
 [jwt]
 pub = "../castore/bpmon.pub"
 prv = "../castore/bpmon.prv"
-realm = "Login Required"
 alg = "RS256"
 leeway = 10
-prefix = "JWT"
 exp = 300
 nbf = 0
-verify_claims = ["signature", "exp", "nbf", "iat"]
-required_claims = ["exp", "iat", "nbf"]
+header = "X-Access-Token"
+verify_claims = ["signature", "exp", "nbf"]
+required_claims = ["exp", "nbf"]
+
 
 [log]
 version = 1

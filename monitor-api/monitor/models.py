@@ -34,7 +34,7 @@ class User(db.Model):
 
     def password_valid(self, password):
         salt, hash_passwd = self.password.split('$', 1)
-        return get_hexdigest(salt, password) == hash_passwd
+        return get_hexdigest(salt.encode(), password.encode()) == hash_passwd
 
     @staticmethod
     def hash_password(password):

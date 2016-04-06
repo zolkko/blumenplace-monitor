@@ -12,7 +12,14 @@ flask_app = monitor.create_app('blumenplace-monitor', dict_config={
     'templateFolder': 'templates',
     'jwt': {
         'pub': '/etc/bpmon/ca/bpmon.pub',
-        'prv': '/etc/bpmon/ca/bpmon.prv'
+        'prv': '/etc/bpmon/ca/bpmon.prv',
+        'alg': 'RS256',
+        'leeway': 10,
+        'exp': 300,
+        'nbf': 0,
+        'header': 'X-Access-Token',
+        'verify_claims': ['signature', 'exp', 'nbf'],
+        'required_claims': ['exp', 'nbf']
     },
     'log': {
         'version': 1,

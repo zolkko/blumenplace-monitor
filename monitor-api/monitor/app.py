@@ -7,13 +7,15 @@ from datetime import timedelta, datetime
 from logging import basicConfig, BASIC_FORMAT, DEBUG
 from logging.config import dictConfig as loggerDictConfig
 
-from flask import Flask, g
+from flask import Flask
 from flask.json import JSONEncoder
 from werkzeug.datastructures import ImmutableDict
+from werkzeug.utils import cached_property
 
-from monitor import urls
+from monitor.api import MonitorApi
 from monitor.config import MonitorConfig
 from monitor.models import db
+from monitor.resources import tokens
 
 
 __all__ = (
@@ -65,28 +67,29 @@ class MonitorApp(Flask):
             instance_relative_config=instance_relative_config)
         self.json_encoder = MonitorJSONEncoder
 
-    @property
+    @cached_property
     def private_key(self):
-        prv_key = getattr(g, '_prv_key', None)
-        if not prv_key:
-            file_path = self.config['jwt']['prv']
-            if not os.path.isabs(file_path):
-                file_path = os.path.abspath(file_path)
-            with open(file_path, 'rt') as f:
-                prv_key = f.read()
-            g._prv_key = prv_key
+        file_path = self.config['jwt']['prv']
+
+        if not os.path.isabs(file_path):
+            file_path = os.path.abspath(file_path)
+
+        with open(file_path, 'rt') as f:
+            prv_key = f.read()
+            self.logger.info('reading data from file')
+
         return prv_key
 
-    @property
+    @cached_property
     def public_key(self):
-        pub_key = getattr(g, '_pub_key', None)
-        if not pub_key:
-            file_path = self.config['jwt']['pub']
-            if not os.path.isabs(file_path):
-                file_path = os.path.abspath(file_path)
-            with open(file_path, 'rt') as f:
-                pub_key = f.read()
-            g._pub_key = pub_key
+        file_path = self.config['jwt']['pub']
+
+        if not os.path.isabs(file_path):
+            file_path = os.path.abspath(file_path)
+
+        with open(file_path, 'rt') as f:
+            pub_key = f.read()
+
         return pub_key
 
     def make_config(self, instance_relative=False):
@@ -103,13 +106,14 @@ class MonitorApp(Flask):
             basicConfig(stream=sys.stdout, format=BASIC_FORMAT, level=DEBUG)
 
     def init_views(self):
-        return urls.init(self)
+        api = MonitorApi()
+
+        self.logger.info('Routing initialization')
+        api.add_resource(tokens.Tokens, '/tokens')
+        self.logger.info('Routing has been initialized')
+
+        api.init_app(self)
 
     def init_models(self):
-        from sqlalchemy.engine.reflection import Inspector
-
         db.init_app(self)
-
-        inspector = Inspector.from_engine(db.engine)
-        for table_name in inspector.get_table_names():
-            self.logger.info('table: %s' % (table_name, ))
+        db.app = self
