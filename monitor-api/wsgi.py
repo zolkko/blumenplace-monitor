@@ -48,7 +48,7 @@ flask_app = monitor.create_app('blumenplace-monitor', dict_config={
     }
 })
 flask_app.init_loggers()
-flask_app.init_model()
+flask_app.init_models()
 flask_app.init_views()
 
 application = DispatcherMiddleware(flask_app)

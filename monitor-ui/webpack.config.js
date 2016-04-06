@@ -9,74 +9,62 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var staticPath = "/static/";
 
 module.exports = {
-    entry: {
-        signin: ["./src/js/signin.js"],
-        vendor: ["react", "react-dom"]
-    },
-    output: {
-        path: __dirname,
-        filename: staticPath + "js/[name].js"
-    },
-    module: {
-        loaders: [
-            {
-                loader: "babel-loader",
-                test: /\.jsx?$/,
-                include: [
-                    path.join(__dirname, "src/js")
-                ],
-                query: {
-                    plugins: ["transform-runtime"],
-                    presets: ["es2015", "stage-0", "react"]
-                }
-            },
-            {
-                loader: ExtractTextPlugin.extract("style", "!css?-minimize!postcss"),
-                test: /\.css$/
-            },
-            {
-                loader: ExtractTextPlugin.extract("style", "!css!postcss!sass"),
-                test: /\.scss$/,
-                include: path.join(__dirname, "src/scss")
-            },
-            {
-                loader: "file?name=" + staticPath + "css/images/[name].[ext]",
-                test: /\.(gif|svg|jpeg|png|jpg)$/
-            },
-            {
-                loader: "file?name=" + staticPath + "css/fonts/[name].[ext]",
-                test: /\.(woff|woff2|ttf|eot)$/
-            }
-        ]
-    },
-    postcss: function () {
-        return [autoprefixer, precss];
-    },
-    resolve: {
-        root: [
-            path.join(__dirname, "src/js"),
-            path.join(__dirname, "src/scss")
+  context: path.join(__dirname, "src/js"),
+  entry: {
+    index: ["babel-polyfill", "./index.js"]
+  },
+  output: {
+    path: path.join(__dirname, "static"),
+    outputPath: __dirname,
+    filename: "js/[name].js"
+  },
+  module: {
+    loaders: [
+      {
+        loader: "babel-loader",
+        test: /\.jsx?$/,
+        include: [
+          path.join(__dirname, "src/js")
         ],
-        alias: {
-            "semantic-ui": path.join(__dirname, "node_modules/semantic-ui-css/components")
-        },
-        modulesDirectories: ["node_modules"],
-        extensions: ["", ".js", ".jsx"]
-    },
-    resolveLoader: {
-        root: path.join(__dirname, "node_modules")
-    },
-    plugins: [
-        new webpack.optimize.CommonsChunkPlugin("vendor", staticPath + "js/vendor.bundle.js"),
-        new webpack.optimize.UglifyJsPlugin({
-            compressor: {
-                screw_ie8: true,
-                warnings: false
-            }
-        }),
-        new ExtractTextPlugin(staticPath + "css/[name].css")
-    ],
-    taregt: "web",
-    debug: true,
-    devtool: "#inline-source-map"
+        query: {
+          plugins: ["transform-runtime"],
+          presets: ["es2015", "stage-0", "react"]
+        }
+      },
+      {
+        loader: ExtractTextPlugin.extract("style-loader", "!css-loader!sass-loader?sourceMap"),
+        test: /\.scss$/,
+        include: path.join(__dirname, "src/scss")
+      },
+      {
+        loader: ExtractTextPlugin.extract("style-loader", "!css-loader?sourceMap"),
+        test: /\.css$/,
+        include: path.join(__dirname, "src/css")
+      }
+    ]
+  },
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      _: "lodash"
+    }),
+    /*new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        screw_ie8: true,
+        warnings: false
+      }
+    }),*/
+    new ExtractTextPlugin("css/[name].css")
+  ],
+  taregt: "web",
+  debug: true,
+  devtool: "#inline-source-map",
+  devServer: {
+    hot: true,
+    publicPath: "/static",
+    watchOptions: {
+      aggregateTimeout: 300,
+      poll: 1000 // is this the same as specifying --watch-poll?
+    }
+  }
 }
