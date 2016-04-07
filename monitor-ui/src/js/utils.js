@@ -16,7 +16,7 @@ export function isNotExpire (expireAt) {
 }
 
 export function isAccessTokenValid(accessToken) {
-    return !!accessToken;
+    return _.isString(accessToken) && accessToken.length > 0;
 }
 
 export function isSignedIn(accessToken, expireAt) {
