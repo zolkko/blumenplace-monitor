@@ -10,6 +10,9 @@ import Home from "./components/home";
 import SignIn from "./components/signin";
 import NotFound from "./components/notfound";
 
+import "less/app.less";
+import "scss/signin.scss";
+
 
 render((
     <Provider store={store}>

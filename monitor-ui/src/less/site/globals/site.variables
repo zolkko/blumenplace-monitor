@@ -1,0 +1,6 @@
+/*******************************
+     User Global Variables
+*******************************/
+
+@fontPath  : '../../default/assets/fonts';
+@imagePath : '../../default/assets/images';

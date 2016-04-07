@@ -8,20 +8,6 @@ import {
 } from "../utils";
 
 
-import "semantic-ui/reset.css";
-import "semantic-ui/site.css";
-import "semantic-ui/container.css";
-import "semantic-ui/grid.css";
-import "semantic-ui/header.css";
-import "semantic-ui/form.css";
-import "semantic-ui/label.css";
-import "semantic-ui/input.css";
-import "semantic-ui/button.css";
-import "semantic-ui/icon.css";
-import "semantic-ui/message.css";
-import "signin.scss";
-
-
 class SignIn extends React.Component {
     constructor(props) {
         super(props);
@@ -29,7 +15,8 @@ class SignIn extends React.Component {
             email: "",
             emailValid: true,
             password: "",
-            passwordValid: true
+            passwordValid: true,
+            displayErrors: true
         };
     }
 
@@ -49,7 +36,8 @@ class SignIn extends React.Component {
             email: nextProps.email,
             emailValid: checkEmailValid(nextProps.email),
             password: nextProps.password,
-            passwordValid: checkPasswordValid(nextProps.password)
+            passwordValid: checkPasswordValid(nextProps.password),
+            displayErrors: true
         });
 
         if (nextProps.isSignedIn) {
@@ -83,26 +71,36 @@ class SignIn extends React.Component {
         });
     }
 
-    prepareErrors() {
+    prepareErrorMessages() {
         if (this.props.error !== null && _.isObject(this.props.error)) {
-            return (
-                <div className="ui error message">
-                    <div className="header">sign-in failed</div>
-                    {_.map(this.props.error, function (error, title) {
-                        return (<p key={title}>{ error }</p>);
-                    })}
-                </div>
-            );
-        } else if (_.isString(this.props.error) && this.props.error.length > 0) {
-            return (
-                <div className="ui error message">
-                    <div className="header">sign-in failed</div>
-                    <p>{ this.props.error }</p>
-                </div>
-            );
+            return _.map(this.props.error, function (error, title) {
+                return (
+                    <ul key="errorList" className="list">
+                        <li key={title}>{ error }</li>
+                    </ul>
+                );
+            });
         } else {
+            return (<p key="errorText">{ this.props.error }</p>);
+        }
+    }
+
+    handleMessageClose() {
+        this.setState({ displayErrors: false });
+    }
+
+    prepareErrors() {
+        if (this.props.error == null || (_.isString(this.props.error) && this.props.error.length === 0)) {
             return null;
         }
+
+        return (
+            <div className="ui error message" style={ this.state.displayErrors ? {} : {display: "none"} }>
+                    <i className="close icon" onClick={this.handleMessageClose.bind(this)}></i>
+                    <div className="header">sign-in failed</div>
+                    {this.prepareErrorMessages()}
+            </div>
+        );
     }
 
     render() {
@@ -116,7 +114,6 @@ class SignIn extends React.Component {
                         <div className="ui left aligned grid">
                             <div className="column sixteen wide center aligned"><h1>blumenplace monitor</h1></div>
                             <div className="column sixteen wide">
-
                                 { errors }
                                 <div className={this.props.isLoading ? "ui loading form segment" : "ui form segment"}>
                                     <SignInField name="email" label="Email"
@@ -132,7 +129,6 @@ class SignIn extends React.Component {
                                     <button onClick={this.onSignIn.bind(this)}
                                         className="ui blue submit button">Sign-In</button>
                                 </div>
-
                             </div>
                         </div>
                     </div>
