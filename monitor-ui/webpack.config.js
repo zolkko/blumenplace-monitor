@@ -9,12 +9,36 @@ var autoprefixer = require("autoprefixer");
 
 const staticPath = "static";
 const staticUrl = "/" + staticPath;
+const isProd = process.env.NODE_ENV == "production";
+
+
+var plugins = [
+    // new webpack.optimize.CommonsChunkPlugin("vendor", "js/vendor.bundle.js"),
+    new ExtractTextPlugin("[name].css"),
+    new webpack.DefinePlugin({
+        "process.env": {
+            NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+        }
+    })
+];
+
+var alias = {};
+
+if (isProd) {
+    plugins.splice(0, 0, new webpack.optimize.UglifyJsPlugin({
+        compressor: {screw_ie8: true, warnings: false}
+    }));
+
+    alias["settings"] = "settings.prod.js";
+} else {
+    alias["settings"] = "settings.dev.js";
+}
 
 
 module.exports = {
     context: path.join(__dirname, "src/js"),
     entry: {
-        index: ["./index.js"]
+        app: ["./index.js"]
     },
     output: {
         path: path.join(__dirname, staticPath),
@@ -26,8 +50,7 @@ module.exports = {
             path.join(__dirname, "src"),
             path.join(__dirname, "src/js")
         ],
-        alias: {
-        },
+        alias: alias,
         modulesDirectories: ["node_modules"],
         extensions: ["", ".js", ".jsx"]
     },
@@ -79,19 +102,10 @@ module.exports = {
         ]
     },
     postcss: function () { return [autoprefixer]; },
-    plugins: [
-        // new webpack.optimize.CommonsChunkPlugin("vendor", "js/vendor.bundle.js"),
-        // new webpack.optimize.UglifyJsPlugin({compressor: {screw_ie8: true, warnings: false}}),
-        new ExtractTextPlugin("[name].css"),
-        new webpack.DefinePlugin({
-            "process.env": {
-                NODE_ENV: JSON.stringify("DEVELOPMENT")
-            }
-        })
-    ],
+    plugins: plugins,
     target: "web",
-    debug: true,
-    devtool: "#inline-source-map",
+    debug: !isProd,
+    devtool: isProd ? "" : "#inline-source-map",
     devServer: {
         hot: true,
         publicPath: staticUrl,
