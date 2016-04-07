@@ -3,12 +3,12 @@ import { render } from "react-dom";
 import { Provider } from "react-redux";
 import { Router, IndexRoute, Route, Link, browserHistory } from "react-router";
 
-import store from "./store";
+import store from "store";
 
-import App from "./components/app";
-import Home from "./components/home";
-import SignIn from "./components/signin";
-import NotFound from "./components/notfound";
+import App from "components/app";
+import Home from "components/home";
+import SignIn from "components/signin";
+import NotFound from "components/notfound";
 
 import "less/app.less";
 import "scss/signin.scss";

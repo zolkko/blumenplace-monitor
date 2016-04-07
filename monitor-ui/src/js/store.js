@@ -1,6 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
-import monitorApp from "./reducers";
+import monitorApp from "reducers";
 
 
 const logger = store => next => action => {

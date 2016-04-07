@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { signOut, refreshToken } from "../actions";
-import { isSignedIn } from "../utils";
-import settings from "../settings";
+import { signOut, refreshToken } from "actions";
+import { isSignedIn } from "utils";
+import settings from "settings";
 
 
 const REFRESH_TIME = 1000 * 5;

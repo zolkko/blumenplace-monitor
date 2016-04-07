@@ -1,11 +1,11 @@
 import _ from "lodash";
 import React from "react";
 import { connect } from "react-redux";
-import { signIn } from "../actions";
-import SignInField from "./signin-field";
+import { signIn } from "actions";
+import SignInField from "components/signin-field";
 import {
     checkEmailValid, checkPasswordValid, isSignedIn
-} from "../utils";
+} from "utils";
 
 
 class SignIn extends React.Component {

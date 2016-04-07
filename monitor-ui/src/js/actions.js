@@ -1,6 +1,6 @@
 import _ from "lodash";
 import axios from "axios";
-import settings from "./settings";
+import settings from "settings";
 
 
 export const SIGNING_IN = "SIGNING_IN";

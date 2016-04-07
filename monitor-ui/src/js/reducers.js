@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import {
     SIGNING_IN, SIGN_IN_SUCCESS, SIGN_IN_FAILED, SIGN_OUT
-} from "./actions";
+} from "actions";
 
 
 const initialUser = {
