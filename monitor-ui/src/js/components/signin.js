@@ -3,9 +3,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { signIn } from "actions";
 import SignInField from "components/signin-field";
-import {
-    checkEmailValid, checkPasswordValid, isSignedIn
-} from "utils";
+import { isSignedIn } from "services/token";
+import { isEmailValid, isPasswordValid } from "services/user";
 
 
 class SignIn extends React.Component {
@@ -21,10 +20,6 @@ class SignIn extends React.Component {
     }
 
     componentWillMount() {
-        if (checkEmailValid(this.props.email) && checkPasswordValid(this.props.password)) {
-            this.props.signIn(this.props.email, this.props.password);
-        }
-
         this.setState({
             email: this.props.email,
             password: this.props.password
@@ -34,19 +29,15 @@ class SignIn extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({
             email: nextProps.email,
-            emailValid: checkEmailValid(nextProps.email),
+            emailValid: isEmailValid(nextProps.email),
             password: nextProps.password,
-            passwordValid: checkPasswordValid(nextProps.password),
+            passwordValid: isPasswordValid(nextProps.password),
             displayErrors: true
         });
 
         if (nextProps.isSignedIn) {
             this.context.router.push("/");
         }
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return true;
     }
 
     onSignIn(e) {
@@ -60,14 +51,14 @@ class SignIn extends React.Component {
     handleEmailChange(email) {
         this.setState({
             email: email,
-            emailValid: checkEmailValid(email)
+            emailValid: isEmailValid(email)
         });
     }
 
     handlePasswordChange(password) {
         this.setState({
             password: password,
-            passwordValid: checkPasswordValid(password)
+            passwordValid: isPasswordValid(password)
         });
     }
 
@@ -143,7 +134,7 @@ SignIn.contextTypes = {
     router: React.PropTypes.object
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     let credentials = state.user.credentials;
     return {
         isLoading: state.user.isLoading,

@@ -8,6 +8,10 @@
   },
   "scripts": {
     "start": "./node_modules/.bin/webpack-dev-server",
+    "build-dev": "./node_modules/.bin/webpack",
+    "build-prod": "NODE_ENV=production ./node_modules/.bin/webpack -p",
+    "watch": "./node_modules/.bin/webpack --watch",
+    "serve": "python -m SimpleHTTPServer 8080",
     "test": "./node_modules/.bin/buster-test"
   },
   "author": "",
@@ -49,5 +53,6 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
+    "babel-plugin-module-map": "^1.0.1"
   }
 }

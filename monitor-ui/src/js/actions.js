@@ -1,16 +1,9 @@
-import _ from "lodash";
-import axios from "axios";
-import settings from "settings";
-
-
-export const SIGNING_IN = "SIGNING_IN";
-export const SIGN_IN_SUCCESS = "SIGN_IN_SUCCESS";
-export const SIGN_IN_FAILED = "SIGN_IN_FAILED";
-export const SIGN_OUT = "SIGN_OUT";
-
-
-const EMAIL_KEY = "EMAIL_KEY";
-const PASSWORD_KEY = "PASSWORD_KEY";
+import * as Token from "services/token";
+import * as User from "services/user";
+import {
+    APP_INITIALIZED,
+    SIGNING_IN, SIGN_IN_SUCCESS, SIGN_IN_FAILED, SIGN_OUT, SIGN_IN_RESTORE_EMAIL
+} from "constants";
 
 
 function signingIn() {
@@ -38,77 +31,63 @@ function signInFailed(email, password, error) {
 
 export function signIn(email, password) {
     return dispatch => {
-        window.localStorage.setItem(EMAIL_KEY, "");
-        window.localStorage.setItem(PASSWORD_KEY, "");
+        User.setEmail("");
+        User.setPassword("");
 
         dispatch(signingIn());
 
-        return axios.post(settings.tokensUrl, {
-            email: email,
-            password: password
-        }, {
-            baseURL: settings.apiUrl,
-            timeout: 1000
-        }).then(response => {
-            if (response.status != 200) {
-                dispatch(signInFailed("Failed to sign-in"));
-            } else {
-                if (_.isObject(response.data) && _.has(response.data, "accessToken") && _.has(response.data, "expireAt")) {
-                    window.localStorage.setItem(EMAIL_KEY, email);
-                    window.localStorage.setItem(PASSWORD_KEY, password);
-                    try {
-                        let expireAt = Date.parse(response.data.expireAt);
-                        dispatch(signInSuccess(email, password, response.data.accessToken, expireAt));
-                    } catch (err) {
-                        dispatch(signInFailed(email, password, "Failed to parse expire-at date. Malformed server response."));
-                    }
-                } else {
-                    dispatch(signInFailed("Failed to sign-in. Malformed server response"));
-                }
-            }
+        return Token.signIn(email, password).then(response => {
+            User.setEmail(email);
+            User.setPassword(password);
+
+            dispatch(signInSuccess(email, password, response.accessToken, response.expireAt));
         }).catch(error => {
-            if (error instanceof Error) {
-                dispatch(signInFailed(email, password, error.message));
-            } else {
-                dispatch(signInFailed(email, password, error.data.message));
-            }
+            dispatch(signInFailed(email, password, error.message));
         });
     };
 }
 
 export function signOut() {
-    window.localStorage.setItem(EMAIL_KEY, "");
-    window.localStorage.setItem(PASSWORD_KEY, "");
+    User.setEmail("");
+    User.setPassword("");
 
     return { type: SIGN_OUT };
 }
 
 export function refreshToken(email, password, accessToken) {
     return dispatch => {
-        let headers = {};
-        headers[settings.authTokenHeader] = accessToken;
+        return Token.refresh(accessToken).then(
+            (response) => dispatch(signInSuccess(email, password, response.accessToken, response.expireAt)),
+            (error) => dispatch(signInFailed(email, password, error.message))
+        );
+    };
+}
 
-        return axios.get(settings.tokensUrl, {
-            baseURL: settings.apiUrl,
-            timeout: 1000,
-            headers: headers
-        }).then(response => {
-            if (_.isObject(response.data) && _.has(response.data, "accessToken") && _.has(response.data, "expireAt")) {
-                try {
-                    let expireAt = Date.parse(response.data.expireAt);
-                    dispatch(signInSuccess(email, password, response.data.accessToken, expireAt));
-                } catch (err) {
-                    dispatch(signInFailed(email, password, "Faild to parse expire-at date. Malformed server response."));
-                }
+export function appInitialized() {
+    return { type: APP_INITIALIZED };
+}
+
+export function restoreEmail(email) {
+    return { type: SIGN_IN_RESTORE_EMAIL, email: email };
+}
+
+export function initializeApp() {
+    return dispatch => {
+        let email = User.getEmail();
+        let password = User.getPassword();
+
+        if (User.isEmailValid(email)) {
+            if (User.isPasswordValid(password)) {
+                dispatch(signIn(email, password)).then(
+                    () => dispatch(appInitialized()),
+                    () => dispatch(appInitialized())
+                );
             } else {
-                dispatch(signInFailed(email, password, "Failed to refresh access token. Malformed service response."));
+                dispatch(restoreEmail(email));
+                dispatch(appInitialized());
             }
-        }).catch(error => {
-            if (error instanceof Error) {
-                dispatch(signInFailed(email, password, error.message))
-            } else {
-                dispatch(signInFailed(email, password, error.data.message));
-            }
-        });
+        } else {
+            dispatch(appInitialized());
+        }
     };
 }

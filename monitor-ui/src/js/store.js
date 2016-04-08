@@ -3,8 +3,6 @@ import thunk from "redux-thunk";
 import monitorApp from "reducers";
 
 
-debugger;
-
 let middleware = [thunk];
 
 if ("production" !== process.env.NODE_ENV) {

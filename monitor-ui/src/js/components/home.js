@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { signOut, refreshToken } from "actions";
-import { isSignedIn } from "utils";
+import { signOut, refreshToken, initializeApp } from "actions";
+import { isSignedIn } from "services/token";
 import settings from "settings";
 
 
@@ -37,6 +37,10 @@ class Home extends React.Component {
     }
 
     componentWillMount() {
+        if (!this.props.initialized) {
+            return this.props.initializeApp();
+        }
+
         if (!this.props.isSignedIn) {
             this.context.router.push(settings.signInUrl);
         } else {
@@ -49,6 +53,10 @@ class Home extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if (!nextProps.initialized) {
+            return this.props.initializeApp();
+        }
+
         if (!nextProps.isSignedIn) {
             this.context.router.push(settings.signInUrl);
         } else {
@@ -64,10 +72,16 @@ class Home extends React.Component {
     }
 
     render() {
+        if (!this.props.initialized) {
+            return null;
+        }
+
         return (
             <div>
                 <h1>The Home Page</h1>
-                <p><button onClick={this.handleSignOut.bind(this)}>Sign Out</button></p>
+                <p>
+                    <button onClick={this.handleSignOut.bind(this)}>Sign Out</button>
+                </p>
             </div>
         );
     }
@@ -80,6 +94,7 @@ Home.contextTypes = {
 const mapStateToProps = function (state, ownProps) {
     let credentials = state.user.credentials;
     return {
+        initialized: state.initialized,
         email: credentials.email,
         password: credentials.password,
         accessToken: credentials.accessToken,
@@ -89,6 +104,7 @@ const mapStateToProps = function (state, ownProps) {
 };
 
 export default connect(mapStateToProps, {
-    signOut: signOut,
-    refreshToken: refreshToken
+    initializeApp: initializeApp,
+    refreshToken: refreshToken,
+    signOut: signOut
 })(Home);
