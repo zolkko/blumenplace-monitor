@@ -1,4 +1,7 @@
 blumenplace-monitor
 ===================
+[![Build Status](https://travis-ci.org/zolkko/blumenplace-monitor.svg?branch=develop)](https://travis-ci.org/zolkko/blumenplace-monitor)
 
-This is intended for monitoring and making a watering plan for blumenplace (https://github.com/zolkko/blumenplace) application.
+WIP: the monitoring app for blumenplace.io
+monitor-ui directory obviously contains front-end code, monitor-api - backend code.
+
