@@ -12,7 +12,7 @@
     "build-prod": "NODE_ENV=production ./node_modules/.bin/webpack -p",
     "watch": "./node_modules/.bin/webpack --watch",
     "serve": "python -m SimpleHTTPServer 8080",
-    "test": "./node_modules/.bin/buster-test"
+    "test": "./node_modules/.bin/buster-test -r teamcity"
   },
   "author": "",
   "license": "MIT",
