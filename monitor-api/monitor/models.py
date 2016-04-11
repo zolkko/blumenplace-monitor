@@ -25,9 +25,10 @@ class User(db.Model):
     password = db.Column(db.String(40), nullable=False)
     username = db.Column(db.Unicode(80), nullable=False)
 
-    def __init__(self, username, email):
+    def __init__(self, username, email, password):
         self.username = username
         self.email = email
+        self.password = User.hash_password(password)
 
     def __repr__(self):
         return '<User %r>' % (self.username, )
