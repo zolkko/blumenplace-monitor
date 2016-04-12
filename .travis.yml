@@ -14,9 +14,9 @@ before_install:
 script: >
   pushd monitor-api &&
   wget https://bootstrap.pypa.io/get-pip.py &&
-  sudo python3 get-pip.py
-  sudo pip3 install setuptools --upgrade
-  sudo pip3 install -r ./requirements.txt &&
+  sudo python3.5 get-pip.py
+  sudo pip3.5 install setuptools --upgrade
+  sudo pip3.5 install -r ./requirements.txt &&
   PYTHONPATH="${PYTHONPATH}:$(pwd)" py.test &&
   popd
   pushd monitor-ui &&
