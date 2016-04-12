@@ -6,5 +6,12 @@ python:
 before_install:
   - sudo apt-get install python3
   - sudo apt-get install python3-setuptools
-script: cd monitor-ui && npm install && npm test && cd ../monitor-api && echo $(dpkg-query -L python3-setuptools) && sudo pip3 install -r ./requirements.txt && PYTHONPATH=${PYTHONPATH}:./ py.test
+  - sudo easy_install3 pip
+script: >
+  cd monitor-ui &&
+  npm install &&
+  npm test &&
+  cd ../monitor-api &&
+  sudo pip3 install -r ./requirements.txt &&
+  PYTHONPATH="${PYTHONPATH}:$(pwd)" py.test
 
