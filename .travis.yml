@@ -1,13 +1,21 @@
-language: python
+language: node_js
+node_js:
+  - "5.1"
 python:
   - "3.5"
 before_install:
+  - sudo apt-get install -y python3.5-complete
+  - sudo easy_install3 pip
   - sudo apt-get install -y nodejs
   - sudo apt-get install -y npm
 install: "pip install -r ./monitor-api/requirements.txt"
 script: >
   pushd monitor-api &&
-  sudo pip install -r ./requirements.txt &&
+  sudo pip3 install -r ./requirements.txt &&
   PYTHONPATH="${PYTHONPATH}:$(pwd)" py.test &&
+  popd
+  pushd monitor-ui &&
+  npm install &&
+  npm test &&
   popd
 
