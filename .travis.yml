@@ -3,8 +3,13 @@ node_js:
   - "5.1"
 python:
   - "3.5"
+addons:
+  apt:
+    sources:
+      - deadsnakes
+    packages:
+      - python3.5
 before_install:
-  - sudo apt-get install -y python3.5
   - sudo easy_install3 pip
   - sudo apt-get install -y nodejs
   - sudo apt-get install -y npm
