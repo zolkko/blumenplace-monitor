@@ -1,6 +1,8 @@
 language: node_js
 node_js:
   - "5.1"
+python:
+  - "3.5"
 before_install:
   - sudo apt-get install python3
   - sudo apt-get install python3-setuptools
