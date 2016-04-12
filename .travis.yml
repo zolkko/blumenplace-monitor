@@ -1,5 +1,6 @@
+sudo: required
 language: node_js
-sudo: true
+dist: trusty
 node_js:
   - "5.1"
 python:
@@ -7,18 +8,21 @@ python:
 addons:
   apt:
     sources:
+      - ubuntu-toolchain-r-test
       - deadsnakes
     packages:
       - python3.5
-      - distribute
-script: >
-  pushd monitor-api &&
-  sudo easy_install-3.5 pip &&
-  sudo pip3.5 install -r ./requirements.txt &&
-  PYTHONPATH="${PYTHONPATH}:$(pwd)" py.test &&
-  popd &&
-  pushd monitor-ui &&
-  npm install &&
-  npm test &&
-  popd
+      - g++-4.8
+      - openjdk-7-jdk
+script:
+  - pushd monitor-api
+  - sudo wget https://bootstrap.pypa.io/get-pip.py
+  - sudo python3.5 get-pip.py
+  - sudo pip3.5 install -r ./requirements.txt
+  - PYTHONPATH="${PYTHONPATH}:$(pwd)" py.test
+  - popd 
+  - pushd monitor-ui
+  - npm install
+  - npm test
+  - popd
 
