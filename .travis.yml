@@ -12,12 +12,13 @@ addons:
       - deadsnakes
     packages:
       - python3.5
+      - python3.5-dev
       - g++-4.8
       - openjdk-7-jdk
 script:
   - pushd monitor-api
   - sudo wget https://bootstrap.pypa.io/get-pip.py
-  - sudo python3.5 get-pip.py
+  - sudo -H python3.5 get-pip.py
   - sudo pip3.5 install -r ./requirements.txt
   - PYTHONPATH="${PYTHONPATH}:$(pwd)" py.test
   - popd 
