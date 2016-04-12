@@ -8,9 +8,6 @@ before_install:
   - sudo apt-get install npm
 install: "pip install -r ./monitor-api/requirements.txt"
 script: >
-  cd monitor-ui &&
-  npm install &&
-  npm test &&
   cd ../monitor-api &&
   sudo pip install -r ./requirements.txt &&
   PYTHONPATH="${PYTHONPATH}:$(pwd)" py.test
