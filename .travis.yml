@@ -11,11 +11,12 @@ addons:
       - python3.5
 before_install:
   - echo "before install"
+  - wget https://bootstrap.pypa.io/get-pip.py ~/get-pip.py
+  - sudo python3.5 ~/get-pip.py
+  - sudo pip3.5 install setuptools --upgrade
 script: >
   pushd monitor-api &&
-  wget https://bootstrap.pypa.io/get-pip.py &&
   sudo python3.5 get-pip.py &&
-  sudo pip3.5 install setuptools --upgrade &&
   sudo pip3.5 install -r ./requirements.txt &&
   PYTHONPATH="${PYTHONPATH}:$(pwd)" py.test &&
   popd
