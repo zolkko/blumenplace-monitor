@@ -9,13 +9,13 @@ addons:
       - deadsnakes
     packages:
       - python3.5
-      - distribute
 before_install:
-  - echo "minimal package content:"
-  - echo $(dpkg -L distribute)
+  - echo "before install"
 script: >
   pushd monitor-api &&
-  sudo easy_install3 pip &&
+  wget https://bootstrap.pypa.io/get-pip.py &&
+  sudo python3 get-pip.py
+  sudo pip3 install setuptools --upgrade
   sudo pip3 install -r ./requirements.txt &&
   PYTHONPATH="${PYTHONPATH}:$(pwd)" py.test &&
   popd
