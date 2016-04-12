@@ -10,15 +10,13 @@ addons:
       - deadsnakes
     packages:
       - python3.5
-before_install:
-  - sudo sh 'curl https://bootstrap.pypa.io/get-pip.py | python3.5'
-  - sudo pip3.5 install setuptools --upgrade
+      - distribute
 script: >
   pushd monitor-api &&
-  sudo python3.5 get-pip.py &&
+  sudo easy_install-3.5 pip &&
   sudo pip3.5 install -r ./requirements.txt &&
   PYTHONPATH="${PYTHONPATH}:$(pwd)" py.test &&
-  popd
+  popd &&
   pushd monitor-ui &&
   npm install &&
   npm test &&
