@@ -4,7 +4,7 @@ node_js:
 python:
   - "3.5"
 before_install:
-  - sudo apt-get install -y python3.5-complete
+  - sudo apt-get install -y python3.5
   - sudo easy_install3 pip
   - sudo apt-get install -y nodejs
   - sudo apt-get install -y npm
