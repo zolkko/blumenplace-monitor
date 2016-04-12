@@ -39,6 +39,9 @@ class User(db.Model):
 
     @staticmethod
     def hash_password(password):
+        if not password:
+            raise ValueError('non empty password expected')
+
         salt = get_hexdigest(str(random.random()).encode(), str(random.random()).encode())[:5]
         hash_passwd = get_hexdigest(salt.encode(), password.encode())
 

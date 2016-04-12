@@ -2,8 +2,6 @@
 
 import pytest
 
-from random import seed as random_seed
-
 from sqlalchemy import create_engine
 
 from werkzeug.exceptions import NotFound
