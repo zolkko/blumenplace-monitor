@@ -22,14 +22,16 @@ from monitor.models import User
 def upgrade():
     rand_seed(1)
     user = sa.sql.table(
-        'user',
+        'users',
         sa.sql.column('id'),
         sa.sql.column('email'),
         sa.sql.column('password'),
-        sa.sql.column('username')
+        sa.sql.column('username'),
+        sa.sql.column('roles')
     )
     op.bulk_insert(user, [
-        {'id': 1, 'email': 'asd@asd', 'password': User.hash_password('asd'), 'username': 'asd'}
+        {'id': 1, 'email': 'admin@test', 'password': User.hash_password('admin'), 'username': 'admin', 'roles': ':admin:user:'},
+        {'id': 2, 'email': 'user@test', 'password': User.hash_password('user'), 'username': 'user', 'roles': ':user:'}
     ])
 
 
@@ -40,5 +42,5 @@ def downgrade():
     )
 
     op.execute(
-        user.delete().where(user.c.id == 1)
+        user.delete().where(user.c.id.in_(1, 2))
     )
