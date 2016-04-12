@@ -10,12 +10,12 @@ addons:
     packages:
       - python3.5
 before_install:
-  - echo $(dpkg -L python3.5)
-install: "pip install -r ./monitor-api/requirements.txt"
+  - echo "minimal package content:"
+  - echo $(dpkg -L python3.5-minimal)
 script: >
   pushd monitor-api &&
-  sudo easy_install pip &&
-  sudo pip install -r ./requirements.txt &&
+  sudo easy_install3 pip &&
+  sudo pip3 install -r ./requirements.txt &&
   PYTHONPATH="${PYTHONPATH}:$(pwd)" py.test &&
   popd
   pushd monitor-ui &&
