@@ -9,9 +9,10 @@ addons:
       - deadsnakes
     packages:
       - python3.5
+      - distribute
 before_install:
   - echo "minimal package content:"
-  - echo $(dpkg -L python3.5-minimal)
+  - echo $(dpkg -L distribute)
 script: >
   pushd monitor-api &&
   sudo easy_install3 pip &&
