@@ -1,0 +1,31 @@
+{
+  "name": "react-template",
+  "reason": {
+    "react-jsx": 2
+  },
+  "sources": [{
+    "dir" : "src",
+    "subdirs" : true
+  }, {
+    "dir": "tests",
+    "type": "dev",
+    "files": [
+      "Example.test.ml",
+      "SumMe.test.re"
+    ]
+  }],
+  "package-specs": [{
+    "module": "commonjs",
+    "in-source": true
+  }],
+  "suffix": ".bs.js",
+  "namespace": true,
+  "bs-dependencies": [
+    "reason-react",
+    "@glennsl/bs-json",
+    "bs-axios",
+    "bs-webapi"
+  ],
+  "bs-dev-dependencies": ["@glennsl/bs-jest"],
+  "refmt": 3
+}
